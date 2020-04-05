@@ -1,1 +1,0 @@
-ez lesz a main
