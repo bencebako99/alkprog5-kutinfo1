@@ -25,7 +25,7 @@ struct Matrix
 //Addition operators 4 versions for all combinations of const& and &&:
 template <typename T>
 Matrix<T> operator+(Matrix<T> const& A, Matrix<T> const& B){
-    Matrix<T> result; result.data.resize(A.N);
+    Matrix<T> result; result.data.resize(A.N*A.N);
     result.N = A.N;
     for(int i=0; i<A.N; i++){
         for(int j=0; j<A.N; j++)
@@ -35,11 +35,188 @@ Matrix<T> operator+(Matrix<T> const& A, Matrix<T> const& B){
 }
 template <typename T>
 Matrix<T>&& operator+(Matrix<T> && A, Matrix<T> && B){
-    Matrix<T> result; result.data.resize(A.N);
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]+=B.data[i*B.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator+(Matrix<T> && A, Matrix<T> const& B){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]+=B.data[i*B.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator+(Matrix<T> const& A, Matrix<T> && B){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            B.data[i*B.N+j]+=A.data[i*A.N+j];
+    }
+    return std::move(B);
+}
+
+
+//- operators 4 versions for all combinations of const& and &&:
+template <typename T>
+Matrix<T> operator-(Matrix<T> const& A, Matrix<T> const& B){
+    Matrix<T> result; result.data.resize(A.N*A.N);
     result.N = A.N;
     for(int i=0; i<A.N; i++){
         for(int j=0; j<A.N; j++)
-            result.data[i*result.N+j]=A.data[i*A.N+j]+B.data[i*A.N+j];
+            result.data[i*result.N+j]=A.data[i*A.N+j]-B.data[i*B.N+j];
+    }
+
+    return result;
+}
+template <typename T>
+Matrix<T>&& operator-(Matrix<T> && A, Matrix<T> && B){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]-=B.data[i*B.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator-(Matrix<T> && A, Matrix<T> const& B){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]-=B.data[i*B.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator-(Matrix<T> const& A, Matrix<T> && B){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            B.data[i*B.N+j]=A.data[i*A.N+j]-B.data[i*B.N+j];
+    }
+    return std::move(B);
+}
+
+// * operator
+template <typename T>
+Matrix<T> operator*(Matrix<T> const& A, int const& scal){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            result.data[i*A.N+j]=A.data[i*A.N+j]*scal;
     }
     return result;
+}
+template <typename T>
+Matrix<T> operator*(int const& scal, Matrix<T> const& A){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            result.data[i*A.N+j]=A.data[i*A.N+j]*scal;
+    }
+    return result;
+}
+template <typename T>
+Matrix<T>&& operator*(int const& scal, Matrix<T> && A){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]*=scal;
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator*(Matrix<T> && A, int const& scal){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]*=scal;
+    }
+    return std::move(A);
+}
+
+
+// / operator
+template <typename T>
+Matrix<T> operator/(Matrix<T> const& A, int const& scal){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            result.data[i*A.N+j]=A.data[i*A.N+j]/scal;
+    }
+    return result;
+}
+template <typename T>
+Matrix<T>&& operator/(Matrix<T> && A, int const& scal){
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]/=scal;
+    }
+    return std::move(A);
+}
+
+//matrix multiplication 4 versions for all combinations of const& and &&:
+template <typename T>
+Matrix<T> operator*(Matrix<T> const& A, Matrix<T> const& B){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++){
+            for(int k=0; k<A.N; k++){
+                result.data[i*result.N+j]+=A.data[i*A.N+k]*B.data[k*A.N+j];
+            }
+        }
+    }
+    return result;
+}
+template <typename T>
+Matrix<T>&& operator*(Matrix<T> && A, Matrix<T> && B){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++){
+            for(int k=0; k<A.N; k++){
+                result.data[i*result.N+j]+=A.data[i*A.N+k]*B.data[k*A.N+j];
+            }
+        }
+    }
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]=result[i*A.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator*(Matrix<T> && A, Matrix<T> const& B){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++){
+            for(int k=0; k<A.N; k++){
+                result.data[i*result.N+j]+=A.data[i*A.N+k]*B.data[k*A.N+j];
+            }
+        }
+    }
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            A.data[i*A.N+j]=result[i*A.N+j];
+    }
+    return std::move(A);
+}
+template <typename T>
+Matrix<T>&& operator*(Matrix<T> const& A, Matrix<T> && B){
+    Matrix<T> result; result.data.resize(A.N*A.N);
+    result.N = A.N;
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++){
+            for(int k=0; k<A.N; k++){
+                result.data[i*result.N+j]+=A.data[i*A.N+k]*B.data[k*A.N+j];
+            }
+        }
+    }
+    for(int i=0; i<A.N; i++){
+        for(int j=0; j<A.N; j++)
+            B.data[i*B.N+j]=result[i*B.N+j];
+    }
+    return std::move(B);
 }
