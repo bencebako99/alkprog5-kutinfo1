@@ -144,4 +144,5 @@ int main(){
         Matrix<double> R = A*move(B);
         if(R(0,0)!=7 || R(0, 1)!=10 || R(1,0)!=15 || R(1,1)!=22) {cout << "problem in addition r*r" << endl;}
     }
+    cout << "Ez egy matrix osztaly" << endl;
 }
