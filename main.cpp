@@ -137,7 +137,7 @@ int main(){
         Matrix<double> R = move(A)*B;
         if(R(0,0)!=7 || R(0, 1)!=10 || R(1,0)!=15 || R(1,1)!=22) {cout << "problem in addition r*r" << endl;}
     }
-    //Test matrix multiplication (l*r) jejeje
+    //Test matrix multiplication (l*r) jejeee
     {
         Matrix<double> A={2}; Matrix<double> B={2};
         A.data = {1, 2, 3, 4}; B.data = {1, 2, 3, 4};
