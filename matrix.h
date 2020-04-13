@@ -5,8 +5,11 @@
 #include <initializer_list>
 #include <cmath>
 #include <ostream>
+#include <sstream>
+#include <fstream>
+#include <string>
 
-
+using namespace std;
 template <typename T>
 
 struct Matrix
@@ -219,4 +222,40 @@ Matrix<T>&& operator*(Matrix<T> const& A, Matrix<T> && B){
             B.data[i*B.N+j]=result[i*B.N+j];
     }
     return std::move(B);
+}
+
+template <typename T>
+ ostream& operator<<(std::ostream& o, Matrix<T> const& M){
+        o << "dim = " << M.N << "x" << M.N << endl;
+        for(int i=0; i<M.N; i++){
+            for(int j=0; j<M.N ; j++){
+                o << M(i,j) << " ";
+            }
+            o << endl;
+        }
+        return o;
+    }
+template <typename T>
+istream& operator>>(std::istream& s, Matrix<T>& M){
+    const auto state = s.rdstate();
+    const auto pos = s.tellg();
+    string tmp;
+    stringstream ss;
+    ss << s;
+    if(ss.str().size()>0){
+        getline(ss, tmp);  M.N= stoi(tmp);
+        for(int i=0; i<M.N; i++){
+            for(int j=0; j<M.N-1; j++){
+                getline(ss, tmp, ' ');  M.data[i*M.N+j] = stod(tmp);
+            }
+            getline(ss, tmp, ' ');  M.data[(i+1)*M.N] = stod(tmp);
+            
+        }
+    }
+    else{
+        s.clear();
+        s.seekg(pos);
+        s.setstate(state);
+    }
+    return s;
 }

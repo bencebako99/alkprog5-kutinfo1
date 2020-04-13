@@ -1,5 +1,8 @@
 #include <iostream>
 #include "matrix.h"
+#include <sstream>
+#include <fstream>
+#include <string>
 using namespace std;
 
 int main(){
@@ -137,12 +140,30 @@ int main(){
         Matrix<double> R = move(A)*B;
         if(R(0,0)!=7 || R(0, 1)!=10 || R(1,0)!=15 || R(1,1)!=22) {cout << "problem in addition r*r" << endl;}
     }
-    //Test matrix multiplication (l*r) jejeee
+    //Test matrix multiplication (l*r)
     {
         Matrix<double> A={2}; Matrix<double> B={2};
         A.data = {1, 2, 3, 4}; B.data = {1, 2, 3, 4};
         Matrix<double> R = A*move(B);
         if(R(0,0)!=7 || R(0, 1)!=10 || R(1,0)!=15 || R(1,1)!=22) {cout << "problem in addition r*r" << endl;}
     }
-    cout << "Ez egy matrix osztaly" << endl;
+    // Test << and >> operators
+    {
+        std::ifstream ifile("data.txt");
+        std::ofstream ofile("data2.txt");
+        std::stringstream s1;
+        Matrix<double> A, B;
+        if (ifile){
+            s1 << ifile.rdbuf();
+        }
+        cout << s1.str() << endl;
+        /*s1 >> A;
+        s1 >> B;
+        std::stringstream s2;
+        s2 << A << " + \n" << B << " = \n" << A+B;
+        if (ofile){
+            ofile << s2.rdbuf();
+        }*/
+    }
+    return 0;
 }
