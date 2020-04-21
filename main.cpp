@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <vector>
 using namespace std;
 
 int main(){
@@ -156,14 +157,13 @@ int main(){
         if (ifile){
             s1 << ifile.rdbuf();
         }
-        cout << s1.str() << endl;
-        /*s1 >> A;
+        s1 >> A;
         s1 >> B;
         std::stringstream s2;
         s2 << A << " + \n" << B << " = \n" << A+B;
         if (ofile){
             ofile << s2.rdbuf();
-        }*/
+        }
     }
     return 0;
 }

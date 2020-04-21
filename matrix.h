@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <istream>
 
 using namespace std;
 template <typename T>
@@ -240,16 +241,16 @@ istream& operator>>(std::istream& s, Matrix<T>& M){
     const auto state = s.rdstate();
     const auto pos = s.tellg();
     string tmp;
-    stringstream ss;
-    ss << s;
-    if(ss.str().size()>0){
+    getline(s, tmp);
+    if(tmp.size()>0){
+        stringstream ss(tmp);
         getline(ss, tmp);  M.N= stoi(tmp);
         for(int i=0; i<M.N; i++){
-            for(int j=0; j<M.N-1; j++){
-                getline(ss, tmp, ' ');  M.data[i*M.N+j] = stod(tmp);
+            getline(s, tmp);
+            stringstream ss1(tmp);
+            for(int j=0; j<M.N; j++){
+                getline(ss1, tmp, ' ');  M.data.push_back(stod(tmp));
             }
-            getline(ss, tmp, ' ');  M.data[(i+1)*M.N] = stod(tmp);
-            
         }
     }
     else{
